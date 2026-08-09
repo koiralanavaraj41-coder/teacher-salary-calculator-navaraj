@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>शिक्षक तलब क्याल्कुलेटर</title>
+    <style>
+        body { font-family: sans-serif; background: #eef2f5; padding: 10px; margin: 0; }
+        .box { background: #fff; padding: 15px; border-radius: 8px; max-width: 480px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h3 { text-align: center; color: #1a5276; margin: 0 0 5px 0; }
+        p.sub { text-align: center; color: #27ae60; font-weight: bold; margin: 0 0 15px 0; font-size: 13px; }
+        .group { margin-bottom: 10px; }
+        label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 3px; color: #333; }
+        select, input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        .card { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 13px; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .green-box { background: #196f3d; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-top: 10px; }
+        .green-box h2 { margin: 5px 0 0 0; font-size: 22px; }
+        .blue-box { background: #1a5276; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-top: 10px; }
+        .blue-box h2 { margin: 5px 0 0 0; font-size: 22px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h3>शिक्षक पूर्ण तलब क्याल्कुलेटर</h3>
+    <p class="sub">आ.व. २०८३/०८४ (मासिक तथा वार्षिक)</p>
+
+    <div class="group">
+        <label>तह र श्रेणी छान्नुहोस्:</label>
+        <select id="level" onchange="runCalc()">
+            <option value="sec_1">माध्यमिक प्रथम (रु. ६२,४६६)</option>
+            <option value="sec_2">माध्यमिक द्वितीय (रु. ५३,६११)</option>
+            <option value="sec_3" selected>माध्यमिक तृतीय (रु. ४८,०५८)</option>
+            <option value="low_1">निम्न माध्यमिक प्रथम (रु. ५३,६११)</option>
+            <option value="low_2">निम्न माध्यमिक द्वितीय (रु. ४८,०५८)</option>
+            <option value="low_3">निम्न माध्यमिक तृतीय (रु. ३८,२०३)</option>
+            <option value="pri_1">प्राथमिक प्रथम (रु. ४८,०५८)</option>
+            <option value="pri_2">प्राथमिक द्वितीय (रु. ३८,२०३)</option>
+            <option value="pri_3">प्राथमिक तृतीय (रु. ३६,१९२)</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label>ग्रेड संख्या:</label>
+        <input type="number" id="gradeCount" value="0" min="0" max="8" onkeyup="runCalc()" onchange="runCalc()">
+    </div>
+
+    <div class="group">
+        <label>प्र.अ. (प्रधानाध्यापक) भत्ता:</label>
+        <select id="isHead" onchange="runCalc()">
+            <option value="0">होइन (रु. ०)</option>
+            <option value="1">हो (तह अनुसार प्र.अ. भत्ता)</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label>स्थानीय भत्ता:</label>
+        <select id="localType" onchange="runCalc()">
+            <option value="table">तालिकाको अधिकतम दर</option>
+            <option value="none">नपाउने (रु. ०)</option>
+            <option value="custom">आफै रकम हाल्ने</option>
+        </select>
+    </div>
+
+    <div class="group" id="customBox" style="display:none;">
+        <label>कति पाउने स्थानीय भत्ता (रु.):</label>
+        <input type="number" id="customLocalVal" value="0" onkeyup="runCalc()" onchange="runCalc()">
+    </div>
+
+    <div class="group">
+        <label>चाडपर्व खर्च (वर्षको १ पटक):</label>
+        <select id="festOpt" onchange="runCalc()">
+            <option value="1">पाउने (१ महिनाको बेसिक+ग्रेड)</option>
+            <option value="0">नपाउने / नजोड्ने (रु. ०)</option>
+        </select>
+    </div>
+
+    <div class="group">
+        <label>पोशाक खर्च (वर्षको १ पटक):</label>
+        <select id="dressOpt" onchange="runCalc()">
+            <option value="10000">अन्य जिल्ला (रु. १०,०००)</option>
+            <option value="15000">हिमाली जिल्ला (रु. १५,०००)</option>
+            <option value="0">नपाउने / नजोड्ने (रु. ०)</option>
+        </select>
+    </div>
+
+    <div class="card">
+        <strong>मासिक आम्दानी (Gross Monthly):</strong>
+        <hr style="border:0.5px solid #ccc;">
+        <div class="row"><span>शुरु तलब SCALE:</span><span>रु. <span id="rBasic">0</span></span></div>
+        <div class="row"><span>ग्रेड रकम (<span id="rGCount">0</span> वटा):</span><span>रु. <span id="rGrade">0</span></span></div>
+        <div class="row" style="font-weight:bold;"><span>जम्मा तलब (Basic+Grade):</span><span>रु. <span id="rSumBG">0</span></span></div>
+        <div class="row"><span>क.सं. कोष (सरकारी १०%):</span><span>रु. <span id="rPfGov">0</span></span></div>
+        <div class="row"><span>बिमा कोष (सरकारी):</span><span>रु. ४००</span></div>
+        <div class="row"><span>स्थानीय भत्ता:</span><span>रु. <span id="rLocal">0</span></span></div>
+        <div class="row"><span>महङ्गी भत्ता:</span><span>रु. ५,०००</span></div>
+        <div class="row"><span>१०% प्रोत्साहन भत्ता:</span><span>रु. <span id="rInc">0</span></span></div>
+        <div class="row"><span>प्र.अ. भत्ता:</span><span>रु. <span id="rHead">0</span></span></div>
+        <div class="row" style="font-weight:bold; color:#1a5276; margin-top:5px;"><span>मासिक कुल जम्मा:</span><span>रु. <span id="rGross">0</span></span></div>
+    </div>
+
+    <div class="card" style="background:#fdf2e9;">
+        <strong style="color:#a04000;">मासिक कट्टी हुने रकम (Deductions):</strong>
+        <hr style="border:0.5px solid #f5cba7;">
+        <div class="row"><span>सञ्चय कोष (२०%):</span><span>रु. <span id="rPfDed">0</span></span></div>
+        <div class="row"><span>सावधिक जीवन बिमा:</span><span>रु. ८००</span></div>
+        <div class="row"><span>सामाजिक सुरक्षा कर (१%):</span><span>रु. <span id="rTax">0</span></span></div>
+        <div class="row" style="font-weight:bold; color:#a04000;"><span>मासिक कुल कट्टी:</span><span>रु. <span id="rDed">0</span></span></div>
+    </div>
+
+    <div class="green-box">
+        <div>मासिक खुद पाउने रकम (Monthly Net):</div>
+        <h2>रु <span id="rNet">0</span></h2>
+    </div>
+
+    <div class="card" style="background:#eaf2f8;">
+        <strong style="color:#1a5276;">वर्षमा १ पटक पाइने अतिरिक्त रकम:</strong>
+        <hr style="border:0.5px solid #aed6f1;">
+        <div class="row"><span>चाडपर्व खर्च:</span><span>रु. <span id="rFest">0</span></span></div>
+        <div class="row"><span>पोशाक खर्च:</span><span>रु. <span id="rDress">0</span></span></div>
+    </div>
+
+    <div class="blue-box">
+        <div>वार्षिक कुल खुद आम्दानी (Annual Net):</div>
+        <h2>रु <span id="rAnnual">0</span></h2>
+    </div>
+
+</div>
+
+<script>
+    var db = {
+        'sec_1': [62466, 2082, 6, 3000, 20680],
+        'sec_2': [53611, 1787, 8, 3000, 17040],
+        'sec_3': [48058, 1602, 8, 3000, 14760],
+        'low_1': [53611, 1787, 8, 2000, 17040],
+        'low_2': [48058, 1602, 8, 2000, 14760],
+        'low_3': [38203, 1273, 8, 2000, 9650],
+        'pri_1': [48058, 1602, 8, 1000, 14760],
+        'pri_2': [38203, 1273, 8, 1000, 9650],
+        'pri_3': [36192, 1206, 6, 1000, 8080]
+    };
+
+    function runCalc() {
+        var lev = document.getElementById('level').value;
+        var info = db[lev];
+        
+        var basic = info[0];
+        var gRate = info[1];
+        var maxG = info[2];
+        var hRate = info[3];
+        var locRate = info[4];
+
+        var gc = parseInt(document.getElementById('gradeCount').value) || 0;
+        if(gc > maxG) { gc = maxG; document.getElementById('gradeCount').value = gc; }
+        if(gc < 0) { gc = 0; document.getElementById('gradeCount').value = 0; }
+
+        var gRakam = Math.round(gRate * gc);
+        var sumBG = basic + gRakam;
+
+        var pfGov = Math.round(sumBG * 0.10);
+        var inc = pfGov;
+        var head = (document.getElementById('isHead').value === "1") ? hRate : 0;
+
+        var locType = document.getElementById('localType').value;
+        var local = 0;
+        if(locType === 'table') {
+            document.getElementById('customBox').style.display = 'none';
+            local = locRate;
+        } else if(locType === 'custom') {
+            document.getElementById('customBox').style.display = 'block';
+            local = parseInt(document.getElementById('customLocalVal').value) || 0;
+        } else {
+            document.getElementById('customBox').style.display = 'none';
+            local = 0;
+        }
+
+        var gross = sumBG + pfGov + 400 + local + 5000 + inc + head;
+
+        var pfDed = pfGov * 2;
+        var tax = Math.round(sumBG * 0.01);
+        var ded = pfDed + 800 + tax;
+
+        var net = gross - ded;
+
+        var fest = (document.getElementById('festOpt').value === "1") ? sumBG : 0;
+        var dress = parseInt(document.getElementById('dressOpt').value) || 0;
+
+        var annual = (net * 12) + fest + dress;
+
+        document.getElementById('rBasic').innerHTML = basic;
+        document.getElementById('rGCount').innerHTML = gc;
+        document.getElementById('rGrade').innerHTML = gRakam;
+        document.getElementById('rSumBG').innerHTML = sumBG;
+        document.getElementById('rPfGov').innerHTML = pfGov;
+        document.getElementById('rLocal').innerHTML = local;
+        document.getElementById('rInc').innerHTML = inc;
+        document.getElementById('rHead').innerHTML = head;
+        document.getElementById('rGross').innerHTML = gross;
+
+        document.getElementById('rPfDed').innerHTML = pfDed;
+        document.getElementById('rTax').innerHTML = tax;
+        document.getElementById('rDed').innerHTML = ded;
+        document.getElementById('rNet').innerHTML = net;
+
+        document.getElementById('rFest').innerHTML = fest;
+        document.getElementById('rDress').innerHTML = dress;
+        document.getElementById('rAnnual').innerHTML = annual;
+    }
+
+    runCalc();
+</script>
+
+</body>
+</html>
