@@ -142,7 +142,6 @@
         return String(val).replace(/[0-9]/g, d => dev[d]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // [Scale, GradeRate, MaxGrade, HeadAllowance, MaxLocalAllowance]
     var db = {
       'sec_1': [62466, 2082, 6, 3000, 20680],
       'sec_2': [53611, 1787, 8, 3000, 17040],
@@ -213,7 +212,7 @@
         document.getElementById('rSumBG').innerText = n(sumBG);
         document.getElementById('rPfGov').innerText = n(pfGov);
         document.getElementById('rLocal').innerText = n(local);
-        document.getElementById('rInc').innerText = n(inc);
+        document.getElementById('rInc').innerText = n(inc); // सच्याइएको भाग
         document.getElementById('rHead').innerText = n(head);
         document.getElementById('rGross').innerText = n(gross);
 
