@@ -112,7 +112,7 @@
         <strong style="color:#a04000;">मासिक कट्टी हुने रकम (Deductions):</strong>
         <hr style="border:0.5px solid #ffcccc;">
         <div class="row"><span>सञ्चय कोष (२०%):</span><span>रु. <span id="rPfDed">0</span></span></div>
-        <div class="row"><span>सावधिक जीवन बिमा:</span><span>रु. ५००</span></div>
+        <div class="row"><span>सावधिक जीवन बिमा:</span><span>रु. ८००</span></div>
         <div class="row"><span>सामाजिक सुरक्षा कर (१%):</span><span>रु. <span id="rTax">0</span></span></div>
         <div class="row" style="font-weight:bold; color:#a04000;"><span>मासिक कट्टी जम्मा:</span><span>रु. <span id="rDed">0</span></span></div>
     </div>
@@ -197,7 +197,7 @@
 
         var pfDed = pfGov * 2;
         var tax = Math.round(sumBG * 0.01);
-        var ded = pfDed + 500 + tax;
+        var ded = pfDed + 800 + tax; // सावधिक जीवन बिमा रु. ८०० कायम गरियो
 
         var net = gross - ded;
 
@@ -212,7 +212,7 @@
         document.getElementById('rSumBG').innerText = n(sumBG);
         document.getElementById('rPfGov').innerText = n(pfGov);
         document.getElementById('rLocal').innerText = n(local);
-        document.getElementById('rInc').innerText = n(inc); // सच्याइएको भाग
+        document.getElementById('rInc').innerText = n(inc);
         document.getElementById('rHead').innerText = n(head);
         document.getElementById('rGross').innerText = n(gross);
 
