@@ -24,7 +24,7 @@
 
 <div class="box">
     <h3>शिक्षक पूर्ण तलब क्याल्कुलेटर</h3>
-    <p class="sub">आ.व. २०८३/०८४ (मासिक तथा वार्षिक हिसाब)</p>
+    <p class="sub">आ.व. २०८३/०८४ आधिकारिक दर अनुसार</p>
 
     <div class="group">
         <label>तह र श्रेणी छान्नुहोस्:</label>
@@ -32,7 +32,7 @@
             <option value="sec_1">माध्यमिक प्रथम (रु. ६२,४६६)</option>
             <option value="sec_2">माध्यमिक द्वितीय (रु. ५३,६११)</option>
             <option value="sec_3" selected>माध्यमिक तृतीय (रु. ४८,०५८)</option>
-            <option value="low_1">निम्न माध्यमिक प्रथम (रु. ५३,६११)</option>
+            <option value="low_1">निम्न माध्यमिक प्रथम (रु. ५०,४४८)</option>
             <option value="low_2">निम्न माध्यमिक द्वितीय (रु. ४८,०५८)</option>
             <option value="low_3">निम्न माध्यमिक तृतीय (रु. ३८,२०३)</option>
             <option value="pri_1">प्राथमिक प्रथम (रु. ४८,०५८)</option>
@@ -43,7 +43,7 @@
 
     <div class="group">
         <label>ग्रेड संख्या:</label>
-        <input type="number" id="gradeCount" value="0" min="0" oninput="runCalc()">
+        <input type="number" id="gradeCount" value="2" min="0" oninput="runCalc()">
     </div>
 
     <div class="group">
@@ -59,13 +59,21 @@
         <select id="localType" onchange="toggleLocal()">
             <option value="table">तालिकाको अधिकतम दर</option>
             <option value="none">नपाउने (रु. ०)</option>
-            <option value="custom">आफै रकम हाल्ने</option>
+            <option value="custom" selected>आफै रकम हाल्ने</option>
         </select>
     </div>
 
-    <div class="group" id="customBox" style="display:none;">
+    <div class="group" id="customBox">
         <label>कति पाउने स्थानीय भत्ता (रु.):</label>
-        <input type="number" id="customLocal" value="0" oninput="runCalc()">
+        <input type="number" id="customLocal" value="11200" oninput="runCalc()">
+    </div>
+
+    <div class="group">
+        <label>१०% प्रोत्साहन भत्ता:</label>
+        <select id="incOpt" onchange="runCalc()">
+            <option value="1" selected>पाउने (जम्मा तलबको १०%)</option>
+            <option value="0">नपाउने (रु. ०)</option>
+        </select>
     </div>
 
     <div class="group">
@@ -94,7 +102,8 @@
         <div class="row"><span>क.सं. कोष (सरकारी १०%):</span><span>रु. <span id="rPfGov">0</span></span></div>
         <div class="row"><span>बिमा कोष (सरकारी):</span><span>रु. ४००</span></div>
         <div class="row"><span>स्थानीय भत्ता:</span><span>रु. <span id="rLocal">0</span></span></div>
-        <div class="row"><span>महङ्गी भत्ता:</span><span>रु. २,०००</span></div>
+        <div class="row"><span>महङ्गी भत्ता:</span><span>रु. ५,०००</span></div>
+        <div class="row"><span>१०% प्रोत्साहन भत्ता:</span><span>रु. <span id="rInc">0</span></span></div>
         <div class="row"><span>प्र.अ. भत्ता:</span><span>रु. <span id="rHead">0</span></span></div>
         <div class="row" style="font-weight:bold; color:#1a5276;"><span>मासिक कुल जम्मा:</span><span>रु. <span id="rGross">0</span></span></div>
     </div>
@@ -103,7 +112,7 @@
         <strong style="color:#a04000;">मासिक कट्टी हुने रकम (Deductions):</strong>
         <hr style="border:0.5px solid #ffcccc;">
         <div class="row"><span>सञ्चय कोष (२०%):</span><span>रु. <span id="rPfDed">0</span></span></div>
-        <div class="row"><span>सावधिक जीवन बिमा:</span><span>रु. ८००</span></div>
+        <div class="row"><span>सावधिक जीवन बिमा:</span><span>रु. ५००</span></div>
         <div class="row"><span>सामाजिक सुरक्षा कर (१%):</span><span>रु. <span id="rTax">0</span></span></div>
         <div class="row" style="font-weight:bold; color:#a04000;"><span>मासिक कट्टी जम्मा:</span><span>रु. <span id="rDed">0</span></span></div>
     </div>
@@ -133,16 +142,17 @@
         return String(val).replace(/[0-9]/g, d => dev[d]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    // [Scale, GradeRate, MaxGrade, HeadAllowance, MaxLocalAllowance]
     var db = {
-      'sec_1': [62466, 2082, 6, 3000, 1700],
-      'sec_2': [53611, 1787, 8, 3000, 1700],
-      'sec_3': [48058, 1602, 8, 3000, 1700],
-      'low_1': [53611, 1787, 8, 2000, 1700],
-      'low_2': [48058, 1602, 8, 2000, 1700],
-      'low_3': [38203, 1273, 8, 2000, 1700],
-      'pri_1': [48058, 1602, 8, 1000, 1700],
-      'pri_2': [38203, 1273, 8, 1000, 1700],
-      'pri_3': [36192, 1206, 6, 1000, 1700]
+      'sec_1': [62466, 2082, 6, 3000, 20680],
+      'sec_2': [53611, 1787, 8, 3000, 17040],
+      'sec_3': [48058, 1602, 8, 3000, 14760],
+      'low_1': [50448, 1682, 8, 2000, 17040],
+      'low_2': [48058, 1602, 8, 2000, 14760],
+      'low_3': [38203, 1273, 8, 2000, 9650],
+      'pri_1': [48058, 1602, 8, 1000, 14760],
+      'pri_2': [38203, 1273, 8, 1000, 9650],
+      'pri_3': [36192, 1206, 6, 1000, 8080]
     };
 
     function toggleLocal() {
@@ -181,11 +191,14 @@
             local = parseInt(document.getElementById('customLocal').value) || 0;
         }
 
-        var gross = sumBG + pfGov + 400 + local + 2000 + head;
+        var incOpt = document.getElementById('incOpt').value;
+        var inc = (incOpt === '1') ? Math.round(sumBG * 0.10) : 0;
+
+        var gross = sumBG + pfGov + 400 + local + 5000 + inc + head;
 
         var pfDed = pfGov * 2;
         var tax = Math.round(sumBG * 0.01);
-        var ded = pfDed + 800 + tax;
+        var ded = pfDed + 500 + tax;
 
         var net = gross - ded;
 
@@ -200,6 +213,7 @@
         document.getElementById('rSumBG').innerText = n(sumBG);
         document.getElementById('rPfGov').innerText = n(pfGov);
         document.getElementById('rLocal').innerText = n(local);
+        document.getElementById('rInc').innerText = n(inc);
         document.getElementById('rHead').innerText = n(head);
         document.getElementById('rGross').innerText = n(gross);
 
@@ -218,4 +232,3 @@
 
 </body>
 </html>
-        
