@@ -197,24 +197,26 @@
 
         var annual = (net * 12) + fest + dress;
 
-        document.getElementById('rBasic').innerHTML = basic;
-        document.getElementById('rGCount').innerHTML = gc;
-        document.getElementById('rGrade').innerHTML = gRakam;
-        document.getElementById('rSumBG').innerHTML = sumBG;
-        document.getElementById('rPfGov').innerHTML = pfGov;
-        document.getElementById('rLocal').innerHTML = local;
-        document.getElementById('rInc').innerHTML = inc;
-        document.getElementById('rHead').innerHTML = head;
-        document.getElementById('rGross').innerHTML = gross;
+document.getElementById('rBasic').innerText = n(basic);
+document.getElementById('rGCount').innerText = n(gc);
+document.getElementById('rGRakam').innerText = n(gRakam);
+document.getElementById('rSumBG').innerText = n(sumBG);
+document.getElementById('rPfGov').innerText = n(pfGov);
+document.getElementById('rLocal').innerText = n(local);
+document.getElementById('rInc').innerText = n(inc);
+document.getElementById('rHead').innerText = n(head);
+document.getElementById('rGross').innerText = n(gross);
 
-        document.getElementById('rPfDed').innerHTML = pfDed;
-        document.getElementById('rTax').innerHTML = tax;
-        document.getElementById('rDed').innerHTML = ded;
-        document.getElementById('rNet').innerHTML = net;
+document.getElementById('rPfDed').innerText = n(pfDed);
+document.getElementById('rTax').innerText = n(tax);
+document.getElementById('rDed').innerText = n(ded);
+document.getElementById('rNet').innerText = n(net);
 
-        document.getElementById('rFest').innerHTML = fest;
-        document.getElementById('rDress').innerHTML = dress;
-        document.getElementById('rAnnual').innerHTML = annual;
+document.getElementById('rFest').innerText = n(fest);
+document.getElementById('rDress').innerText = n(dress);
+document.getElementById('rAnnual').innerText = n(annual);
+
+
     }
 
     runCalc();
