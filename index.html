@@ -5,26 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>शिक्षक तलब क्याल्कुलेटर</title>
     <style>
-        body { font-family: sans-serif; background: #eef2f5; padding: 10px; margin: 0; }
-        .box { background: #fff; padding: 15px; border-radius: 8px; max-width: 480px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        h3 { text-align: center; color: #1a5276; margin: 0 0 5px 0; }
-        p.sub { text-align: center; color: #27ae60; font-weight: bold; margin: 0 0 15px 0; font-size: 13px; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 10px; margin: 0; }
+        .box { background: #fff; padding: 15px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h3 { text-align: center; color: #1a5276; margin-top: 5px; }
+        p.sub { text-align: center; color: #555; font-size: 13px; margin-bottom: 15px; }
         .group { margin-bottom: 10px; }
-        label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 3px; color: #333; }
-        select, input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
-        .card { background: #f8f9fa; border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 13px; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 4px; }
-        .green-box { background: #196f3d; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-top: 10px; }
-        .green-box h2 { margin: 5px 0 0 0; font-size: 22px; }
-        .blue-box { background: #1a5276; color: white; padding: 10px; border-radius: 5px; text-align: center; margin-top: 10px; }
-        .blue-box h2 { margin: 5px 0 0 0; font-size: 22px; }
+        label { display: block; font-weight: bold; margin-bottom: 3px; font-size: 14px; }
+        select, input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .card { background: #f8f9fa; border: 1px solid #e0e0e0; padding: 10px; border-radius: 6px; margin-top: 15px; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 14px; }
+        .green-box { background: #198754; color: white; padding: 10px; border-radius: 6px; text-align: center; margin-top: 15px; }
+        .green-box h2 { margin: 5px 0 0 0; }
+        .blue-box { background: #1a5276; color: white; padding: 10px; border-radius: 6px; text-align: center; margin-top: 10px; }
+        .blue-box h2 { margin: 5px 0 0 0; }
     </style>
 </head>
 <body>
 
 <div class="box">
     <h3>शिक्षक पूर्ण तलब क्याल्कुलेटर</h3>
-    <p class="sub">आ.व. २०८३/०८४ (मासिक तथा वार्षिक)</p>
+    <p class="sub">आ.व. २०८३/०८४ (मासिक तथा वार्षिक हिसाब)</p>
 
     <div class="group">
         <label>तह र श्रेणी छान्नुहोस्:</label>
@@ -43,7 +43,7 @@
 
     <div class="group">
         <label>ग्रेड संख्या:</label>
-        <input type="number" id="gradeCount" value="0" min="0" max="8" onkeyup="runCalc()" onchange="runCalc()">
+        <input type="number" id="gradeCount" value="0" min="0" oninput="runCalc()">
     </div>
 
     <div class="group">
@@ -56,24 +56,23 @@
 
     <div class="group">
         <label>स्थानीय भत्ता:</label>
-        <select id="localType" onchange="runCalc()">
+        <select id="localType" onchange="toggleLocal()">
             <option value="table">तालिकाको अधिकतम दर</option>
             <option value="none">नपाउने (रु. ०)</option>
             <option value="custom">आफै रकम हाल्ने</option>
         </select>
     </div>
 
-    <div class="group" id="customBox">
-
+    <div class="group" id="customBox" style="display:none;">
         <label>कति पाउने स्थानीय भत्ता (रु.):</label>
-        <input type="number" id="customLocalVal" value="0" onkeyup="runCalc()" onchange="runCalc()">
+        <input type="number" id="customLocal" value="0" oninput="runCalc()">
     </div>
 
     <div class="group">
         <label>चाडपर्व खर्च (वर्षको १ पटक):</label>
         <select id="festOpt" onchange="runCalc()">
             <option value="1">पाउने (१ महिनाको बेसिक+ग्रेड)</option>
-            <option value="0">नपाउने / नजोड्ने (रु. ०)</option>
+            <option value="0">नपाउने / नजोड्ने</option>
         </select>
     </div>
 
@@ -81,8 +80,8 @@
         <label>पोशाक खर्च (वर्षको १ पटक):</label>
         <select id="dressOpt" onchange="runCalc()">
             <option value="10000">अन्य जिल्ला (रु. १०,०००)</option>
-            <option value="15000">हिमाली जिल्ला (रु. १५,०००)</option>
-            <option value="0">नपाउने / नजोड्ने (रु. ०)</option>
+            <option value="15000" selected>हिमाली जिल्ला (रु. १५,०००)</option>
+            <option value="0">नपाउने / नजोड्ने</option>
         </select>
     </div>
 
@@ -90,101 +89,99 @@
         <strong>मासिक आम्दानी (Gross Monthly):</strong>
         <hr style="border:0.5px solid #ccc;">
         <div class="row"><span>शुरु तलब SCALE:</span><span>रु. <span id="rBasic">0</span></span></div>
-        <div class="row"><span>ग्रेड रकम (<span id="rGCount">0</span> वटा):</span><span>रु. <span id="rGrade">0</span></span></div>
+        <div class="row"><span>ग्रेड रकम (<span id="rGCount">0</span> वटा):</span><span>रु. <span id="rGRakam">0</span></span></div>
         <div class="row" style="font-weight:bold;"><span>जम्मा तलब (Basic+Grade):</span><span>रु. <span id="rSumBG">0</span></span></div>
         <div class="row"><span>क.सं. कोष (सरकारी १०%):</span><span>रु. <span id="rPfGov">0</span></span></div>
         <div class="row"><span>बिमा कोष (सरकारी):</span><span>रु. ४००</span></div>
         <div class="row"><span>स्थानीय भत्ता:</span><span>रु. <span id="rLocal">0</span></span></div>
-        <div class="row"><span>महङ्गी भत्ता:</span><span>रु. ५,०००</span></div>
-        <div class="row"><span>१०% प्रोत्साहन भत्ता:</span><span>रु. <span id="rInc">0</span></span></div>
+        <div class="row"><span>महङ्गी भत्ता:</span><span>रु. २,०००</span></div>
         <div class="row"><span>प्र.अ. भत्ता:</span><span>रु. <span id="rHead">0</span></span></div>
-        <div class="row" style="font-weight:bold; color:#1a5276; margin-top:5px;"><span>मासिक कुल जम्मा:</span><span>रु. <span id="rGross">0</span></span></div>
+        <div class="row" style="font-weight:bold; color:#1a5276;"><span>मासिक कुल जम्मा:</span><span>रु. <span id="rGross">0</span></span></div>
     </div>
 
-    <div class="card" style="background:#fdf2e9;">
+    <div class="card" style="background:#fff0f0; border-color:#ffcccc;">
         <strong style="color:#a04000;">मासिक कट्टी हुने रकम (Deductions):</strong>
-        <hr style="border:0.5px solid #f5cba7;">
+        <hr style="border:0.5px solid #ffcccc;">
         <div class="row"><span>सञ्चय कोष (२०%):</span><span>रु. <span id="rPfDed">0</span></span></div>
         <div class="row"><span>सावधिक जीवन बिमा:</span><span>रु. ८००</span></div>
         <div class="row"><span>सामाजिक सुरक्षा कर (१%):</span><span>रु. <span id="rTax">0</span></span></div>
-        <div class="row" style="font-weight:bold; color:#a04000;"><span>मासिक कुल कट्टी:</span><span>रु. <span id="rDed">0</span></span></div>
+        <div class="row" style="font-weight:bold; color:#a04000;"><span>मासिक कट्टी जम्मा:</span><span>रु. <span id="rDed">0</span></span></div>
     </div>
 
     <div class="green-box">
         <div>मासिक खुद पाउने रकम (Monthly Net):</div>
-        <h2>रु <span id="rNet">0</span></h2>
+        <h2>रु. <span id="rNet">0</span></h2>
     </div>
 
-    <div class="card" style="background:#eaf2f8;">
-        <strong style="color:#1a5276;">वर्षमा १ पटक पाइने अतिरिक्त रकम:</strong>
-        <hr style="border:0.5px solid #aed6f1;">
+    <div class="card" style="background:#eef6fc; border-color:#bce0fd;">
+        <strong style="color:#1a5276;">वार्षिक बोनस रकमहरू:</strong>
+        <hr style="border:0.5px solid #bce0fd;">
         <div class="row"><span>चाडपर्व खर्च:</span><span>रु. <span id="rFest">0</span></span></div>
         <div class="row"><span>पोशाक खर्च:</span><span>रु. <span id="rDress">0</span></span></div>
     </div>
 
     <div class="blue-box">
-        <div>वार्षिक कुल खुद आम्दानी (Annual Net):</div>
-        <h2>रु <span id="rAnnual">0</span></h2>
+        <div>वार्षिक कुल खुद आम्दानी (Annual Net Income):</div>
+        <h2>रु. <span id="rAnnual">0</span></h2>
     </div>
-
 </div>
 
 <script>
-       function n(val) {
-  if (val === undefined || val === null) return '';
-  var dev = ['०','१','२','३','४','५','६','७','८','९'];
-  return String(val).replace(/[0-9]/g, d => dev[d]);
-}
+    function n(val) {
+        if (val === undefined || val === null) return '०';
+        var dev = ['०','१','२','३','४','५','६','७','८','९'];
+        return String(val).replace(/[0-9]/g, d => dev[d]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-
-        var db = {
-      'sec_1': [48058, 1602, 8, 3000, 1700],
-      'sec_2': [43689, 1456, 8, 3000, 1700],
-      'sec_3': [34730, 1158, 8, 3000, 1700],
-      'low_1': [43689, 1456, 8, 2000, 1700],
-      'low_2': [34730, 1158, 8, 2000, 1700],
-      'low_3': [32900, 1097, 6, 2000, 1700],
-      'pri_1': [34730, 1158, 8, 1000, 1700],
-      'pri_2': [32900, 1097, 8, 1000, 1700],
-      'pri_3': [29820, 994, 6, 1000, 1700]
+    var db = {
+      'sec_1': [62466, 2082, 6, 3000, 1700],
+      'sec_2': [53611, 1787, 8, 3000, 1700],
+      'sec_3': [48058, 1602, 8, 3000, 1700],
+      'low_1': [53611, 1787, 8, 2000, 1700],
+      'low_2': [48058, 1602, 8, 2000, 1700],
+      'low_3': [38203, 1273, 8, 2000, 1700],
+      'pri_1': [48058, 1602, 8, 1000, 1700],
+      'pri_2': [38203, 1273, 8, 1000, 1700],
+      'pri_3': [36192, 1206, 6, 1000, 1700]
     };
 
+    function toggleLocal() {
+        var t = document.getElementById('localType').value;
+        document.getElementById('customBox').style.display = (t === 'custom') ? 'block' : 'none';
+        runCalc();
+    }
 
     function runCalc() {
         var lev = document.getElementById('level').value;
         var info = db[lev];
-        
+
         var basic = info[0];
         var gRate = info[1];
         var maxG = info[2];
         var hRate = info[3];
         var locRate = info[4];
 
-        var gc = parseInt(document.getElementById('gradeCount').value) || 0;
-        if(gc > maxG) { gc = maxG; document.getElementById('gradeCount').value = gc; }
-        if(gc < 0) { gc = 0; document.getElementById('gradeCount').value = 0; }
+        var gcInput = document.getElementById('gradeCount');
+        var gc = parseInt(gcInput.value) || 0;
+        if (gc > maxG) { gc = maxG; gcInput.value = maxG; }
+        if (gc < 0) { gc = 0; gcInput.value = 0; }
 
         var gRakam = Math.round(gRate * gc);
         var sumBG = basic + gRakam;
 
         var pfGov = Math.round(sumBG * 0.10);
-        var inc = pfGov;
-        var head = (document.getElementById('isHead').value === "1") ? hRate : 0;
+        var isHead = document.getElementById('isHead').value;
+        var head = (isHead === '1') ? hRate : 0;
 
         var locType = document.getElementById('localType').value;
         var local = 0;
-        if(locType === 'table') {
-            document.getElementById('customBox').style.display = 'none';
+        if (locType === 'table') {
             local = locRate;
-        } else if(locType === 'custom') {
-            document.getElementById('customBox').style.display = 'block';
-            local = parseInt(document.getElementById('customLocalVal').value) || 0;
-        } else {
-            document.getElementById('customBox').style.display = 'none';
-            local = 0;
+        } else if (locType === 'custom') {
+            local = parseInt(document.getElementById('customLocal').value) || 0;
         }
 
-        var gross = sumBG + pfGov + 400 + local + 5000 + inc + head;
+        var gross = sumBG + pfGov + 400 + local + 2000 + head;
 
         var pfDed = pfGov * 2;
         var tax = Math.round(sumBG * 0.01);
@@ -192,35 +189,33 @@
 
         var net = gross - ded;
 
-        var fest = (document.getElementById('festOpt').value === "1") ? sumBG : 0;
+        var fest = (document.getElementById('festOpt').value === '1') ? sumBG : 0;
         var dress = parseInt(document.getElementById('dressOpt').value) || 0;
 
         var annual = (net * 12) + fest + dress;
 
-document.getElementById('rBasic').innerText = n(basic);
-document.getElementById('rGCount').innerText = n(gc);
-document.getElementById('rGRakam').innerText = n(gRakam);
-document.getElementById('rSumBG').innerText = n(sumBG);
-document.getElementById('rPfGov').innerText = n(pfGov);
-document.getElementById('rLocal').innerText = n(local);
-document.getElementById('rInc').innerText = n(inc);
-document.getElementById('rHead').innerText = n(head);
-document.getElementById('rGross').innerText = n(gross);
+        document.getElementById('rBasic').innerText = n(basic);
+        document.getElementById('rGCount').innerText = n(gc);
+        document.getElementById('rGRakam').innerText = n(gRakam);
+        document.getElementById('rSumBG').innerText = n(sumBG);
+        document.getElementById('rPfGov').innerText = n(pfGov);
+        document.getElementById('rLocal').innerText = n(local);
+        document.getElementById('rHead').innerText = n(head);
+        document.getElementById('rGross').innerText = n(gross);
 
-document.getElementById('rPfDed').innerText = n(pfDed);
-document.getElementById('rTax').innerText = n(tax);
-document.getElementById('rDed').innerText = n(ded);
-document.getElementById('rNet').innerText = n(net);
+        document.getElementById('rPfDed').innerText = n(pfDed);
+        document.getElementById('rTax').innerText = n(tax);
+        document.getElementById('rDed').innerText = n(ded);
+        document.getElementById('rNet').innerText = n(net);
 
-document.getElementById('rFest').innerText = n(fest);
-document.getElementById('rDress').innerText = n(dress);
-document.getElementById('rAnnual').innerText = n(annual);
-
-
+        document.getElementById('rFest').innerText = n(fest);
+        document.getElementById('rDress').innerText = n(dress);
+        document.getElementById('rAnnual').innerText = n(annual);
     }
 
     runCalc();
 </script>
 
 </body>
-</html> 
+</html>
+        
